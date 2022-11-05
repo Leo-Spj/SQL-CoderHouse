@@ -1,3 +1,4 @@
+
 USE huellitas_centro_adopcion;
 
 CREATE OR REPLACE VIEW total_ingreso_actividad AS
