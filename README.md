@@ -1,15 +1,14 @@
-# Primera entrega
-## Se debe entregar :
-* Descripción de la temática de la base de datos
-* Diagramas de entidad relación de la base de datos
-* Listado de las tablas que comprenden la base de datos, con descripción de cada tabla, listado de campos, abreviaturas de nombres de campos, nombres completos de campos, tipos de datos, tipo de clave (foránea, primaria, índice(s)).
-* Un archivo .sql que contenga:
-* * <a href="https://github.com/Leo-Spj/SQL-CoderHouse/blob/main/script.sql"><strong>Script</strong></a> en SQL de creación de la base de datos y tablas. Este puede estar publicado en un repositorio github, con lo cual el documento pdf debe contener los links de las publicaciones. 
 
-## Formato
+## Script Principal
+### [Script](https://github.com/Leo-Spj/SQL-CoderHouse/blob/main/script.sql)
+> agregué dos tablas más: "tipo_gasto" y "tipo_actividad".
 
-* Aclarar el tipo de archivo en que se espera el desafío. Aclarar que debe tener el nombre “Idea+Apellido”.
+------
 
-## Sugerencias
+## Desafío 1
+### [Script de inserción de datos](https://github.com/Leo-Spj/SQL-CoderHouse/blob/main/insercion_datos.sql)
 
-* Permitir comentarios en el archivo
+------
+
+## Desafío 2
+### [Presentación de script de creación de vistas](https://github.com/Leo-Spj/SQL-CoderHouse/blob/main/vistas.sql)
