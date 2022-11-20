@@ -19,7 +19,7 @@ return años;
 
 end$$
 
-
+  
 DROP FUNCTION IF EXISTS `meses_transcurridos`;
 DELIMITER $$
 USE `nuevo_huellitas`$$
@@ -177,6 +177,7 @@ CREATE TABLE IF NOT EXISTS global_personas(
 );
 INSERT INTO global_personas(dni,nombre,apellido)
 VALUES
+(10000000,'HUELLITAS AGRUPACION ESTUDIANTIL', 'HUELLITAS AGRUPACION ESTUDIANTIL'),
 (77827980,'Janaye','Malshinger'),
 (80772770,'Michaella','Knightsbridge'),
 (68191408,'Tadio','Heugle'),
@@ -207,6 +208,7 @@ CREATE TABLE IF NOT EXISTS residencia(
 );
 INSERT INTO residencia
 VALUES
+(10000000,'Universidad Nacional Agraria la Molina'),
 (77827980,'393 Golden Leaf Avenue'),
 (80772770,'9 Di Loreto Way'),
 (68191408,'9861 Fair Oaks Plaza'),
@@ -234,17 +236,18 @@ VALUES
 
 CREATE TABLE IF NOT EXISTS emails(
 	dni INT NOT NULL,
-    email VARCHAR(40) UNIQUE,
+    email VARCHAR(200) UNIQUE DEFAULT NULL,
     
     FOREIGN KEY (dni) REFERENCES global_personas(dni) ON DELETE CASCADE ON UPDATE CASCADE
 );
 INSERT INTO emails
 VALUES
+(10000000,'agrupacionestudiantil_huellitas@gmail.com'),
 (77827980,'njosowitz0@google.ca'),
 (80772770,'mduffie1@wp.com'),
 (68191408,'drustman2@yandex.ru'),
 (72506704,'mcarlucci3@ehow.com'),
-(72919941,''),
+(72919941, NULL ),
 (83315590,'btiffin5@google.com'),
 (60831369,'grosen6@mediafire.com'),
 (66050557,'dlorkins7@independent.co.uk'),
@@ -277,12 +280,13 @@ VALUES
 
 CREATE TABLE IF NOT EXISTS telefonos(
 	dni INT NOT NULL,
-    telefono VARCHAR(11) NOT NULL UNIQUE,
+    telefono VARCHAR(14) NOT NULL UNIQUE,
     
     FOREIGN KEY (dni) REFERENCES global_personas(dni) ON DELETE CASCADE ON UPDATE CASCADE
 );
 INSERT INTO telefonos
 VALUES
+(10000000,'456-456'),
 (77827980,'9106361487'),
 (80772770,'1294910651'),
 (68191408,'1868639781'),
@@ -325,6 +329,7 @@ CREATE TABLE IF NOT EXISTS tipos_rolcargo(
 );
 INSERT INTO tipos_rolcargo(rolcargo)
 VALUES
+('albergue'),
 ('cuidador'),
 ('administrador'),
 ('logistica'),
@@ -346,7 +351,7 @@ INSERT INTO personal(dni, fecha_inicio)
 VALUES
 (80772770,'2020-10-30'),
 (83315590,'2020-10-30'),
-(71036485,'2020-11-15'),
+(71036485,'2020-11-05'),
 (79654984,'2020-11-15'),
 (67124542,'2020-11-30'),
 (76120720,'2021-02-04'),
@@ -362,25 +367,36 @@ CREATE TABLE IF NOT EXISTS rolescargos_personal(
 );
 INSERT INTO rolescargos_personal
 VALUES
-(1,4),
-(1,6),
-(2,2),
-(2,5),
-(3,3),
-(3,7),
-(4,1),
-(5,1),
-(6,1),
-(7,1)
+(1,5),
+(1,7),
+(2,3),
+(2,6),
+(3,4),
+(3,8),
+(4,2),
+(5,2),
+(6,2),
+(7,2)
 ;
+
+-- TABLA PARA TRIGGER:
+CREATE TABLE IF NOT EXISTS trg_cuidadores_historial(
+	id_mascota INT NOT NULL UNIQUE,
+    codigo_personal INT NOT NULL,
+    fecha_asignada DATE NOT NULL,
+    fecha_adoptado DATE NOT NULL DEFAULT (curdate()),
+    
+    FOREIGN KEY (id_mascota) REFERENCES mascota(id_mascota) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (codigo_personal) REFERENCES personal(codigo_personal) ON DELETE RESTRICT ON UPDATE CASCADE
+);
 
 CREATE TABLE IF NOT EXISTS mascota_personal(
 	id_mascota INT NOT NULL,
     codigo_personal INT NOT NULL,
     fecha_asignada DATE NOT NULL,
     
-    FOREIGN KEY (id_mascota) REFERENCES mascota(id_mascota) ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (codigo_personal) REFERENCES personal(codigo_personal) ON DELETE RESTRICT ON UPDATE CASCADE
+    FOREIGN KEY (id_mascota) REFERENCES mascota(id_mascota) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (codigo_personal) REFERENCES personal(codigo_personal) ON DELETE CASCADE ON UPDATE CASCADE
 );
 INSERT INTO mascota_personal
 VALUES
@@ -389,12 +405,32 @@ VALUES
 (4,6,'2021-02-06'),
 (12,7,'2021-02-06')
 ;
+CREATE OR REPLACE VIEW `cuidadores_con_mascotas`  AS
+SELECT 
+	M.id_mascota AS 'ID Mascota',
+    E.especie AS Especie,
+    M.nombre AS Mascota,
+    S.sexo AS Sexo,
+    P.codigo_personal AS 'Codigo del Personal',
+    GP.dni AS  'DNI Cuidador',
+    CONCAT(GP.nombre," ",GP.apellido) AS 'Nombre cuidador'
+    
+    FROM mascota_personal AS MP
+    
+    INNER JOIN mascota AS M ON M.id_mascota = MP.id_mascota
+    INNER JOIN especies AS E ON E.codigo_especie = M.codigo_especie
+    INNER JOIN sexo AS S ON S.codigo_sexo = M.codigo_sexo
+    INNER JOIN personal AS P ON P.codigo_personal = MP.codigo_personal
+    INNER JOIN global_personas AS GP ON GP.dni = P.dni
+     
+     ORDER BY M.id_mascota ASC
+;
 
 CREATE TABLE IF NOT EXISTS adoptante(
 	codigo_adopcion INT NOT NULL AUTO_INCREMENT UNIQUE,
-    id_mascota INT NOT NULL,
+    id_mascota INT NOT NULL UNIQUE,
     dni INT NOT NULL,
-    fecha_adopcion DATE NOT NULL,
+    fecha_adopcion DATE NOT NULL DEFAULT (CURRENT_DATE),
     
     PRIMARY KEY (codigo_adopcion),
     FOREIGN KEY (id_mascota) REFERENCES mascota(id_mascota) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -509,6 +545,8 @@ FROM mascota AS M
 INNER JOIN 	especies AS E 	ON 	E.codigo_especie = M.codigo_especie
 INNER JOIN 	tamaño 	AS T 	ON 	T.codigo_tamaño	 = M.codigo_tamaño
 INNER JOIN 	sexo 	AS S 	ON 	S.codigo_sexo	 = M.codigo_sexo
+
+ORDER BY M.edad DESC
 ;
 
 
@@ -526,6 +564,9 @@ SELECT
     INNER JOIN telefonos AS T ON T.dni = G.dni
     INNER JOIN emails AS E ON E.dni = G.dni
     INNER JOIN residencia AS R ON R.dni = G.dni
+    
+    GROUP BY G.dni
+    ORDER BY G.apellido asc
 ;
 
 
@@ -551,9 +592,10 @@ BEGIN
 		INNER JOIN 	tamaño 	AS T 	ON 	T.codigo_tamaño	 = M.codigo_tamaño
 		INNER JOIN 	sexo 	AS S 	ON 	S.codigo_sexo	 = M.codigo_sexo
 		WHERE E.codigo_especie = (
-		SELECT codigo_especie 
-		FROM especies 
-        WHERE codigo_especie = 1);
+			SELECT codigo_especie 
+			FROM especies 
+			WHERE codigo_especie = 1)
+        ORDER BY M.edad DESC;
 	END IF;
     
 	IF (tipo_especie = 'gato') THEN
@@ -570,7 +612,8 @@ BEGIN
 		WHERE E.codigo_especie = (
 		SELECT codigo_especie 
 		FROM especies 
-        WHERE codigo_especie = 2);
+        WHERE codigo_especie = 2)
+        ORDER BY M.edad DESC;
 	END IF;
 END$$
 DELIMITER ;
@@ -591,23 +634,55 @@ CREATE PROCEDURE `ingresar_persona` (
     IN email_p VARCHAR(60),
     IN residencia_p VARCHAR(200))
 BEGIN	
-	INSERT INTO global_personas
-    VALUES (dni_p, nombre_p, apellido_p);
 
-    INSERT INTO telefonos
-    VALUES (dni_p, telefono_p);
+	IF (email_p = '') THEN
+		SET email_p = NULL;
+	END IF;
     
-    INSERT INTO emails
-    VALUES (dni_p, email_p);
+    IF (nombre_p <>'' || apellido_p <>'' || telefono_p <>'' || residencia_p <>'') THEN
+		INSERT INTO global_personas
+		VALUES (dni_p, nombre_p, apellido_p);
+
+		INSERT INTO telefonos
+		VALUES (dni_p, telefono_p);
+			
+		INSERT INTO emails
+		VALUES (dni_p, email_p);
+		
+		INSERT INTO residencia
+		VALUES (dni_p, residencia_p);
+	
+-- Alerta aqui!! averiguar
+
+	END IF;
     
-    INSERT INTO residencia
-    VALUES (dni_p, residencia_p);
+    
+	
 END$$
 DELIMITER ;
 
 
 
+DROP PROCEDURE IF EXISTS `adopcion`;
+DELIMITER $$
+USE `nuevo_huellitas`$$
+CREATE PROCEDURE `adopcion` (IN idMascota INT, IN dniPersona INT, IN fechaAdopcion DATE)
+BEGIN
+	INSERT INTO adoptante(id_mascota, dni, fecha_adopcion)
+	VALUES (idMascota,dniPersona,fechaAdopcion);
+END$$
+DELIMITER ;
 
+
+DELIMITER $$
+CREATE TRIGGER `trg_eliminar-mascotaPersonal`
+AFTER DELETE ON mascota_personal 
+FOR EACH ROW
+BEGIN
+	INSERT INTO trg_cuidadores_historial(id_mascota, codigo_personal, fecha_asignada, fecha_adoptado)
+    VALUES (OLD.id_mascota, OLD.codigo_personal, OLD.fecha_asignada, CURDATE());
+END$$
+DELIMITER ;
 
 
 
