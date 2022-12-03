@@ -1,3 +1,5 @@
+-- DCL - Data Control Language
+
 use mysql;
 
 -- Este usuario es para el personal que cuida las mascotas
