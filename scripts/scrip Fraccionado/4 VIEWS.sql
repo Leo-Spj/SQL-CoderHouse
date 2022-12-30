@@ -60,9 +60,9 @@ SELECT
     
 FROM mascota AS M
 
-INNER JOIN 	especies AS E 	ON 	E.codigo_especie = M.codigo_especie
-INNER JOIN 	tamaño 	AS T 	ON 	T.codigo_tamaño	 = M.codigo_tamaño
-INNER JOIN 	sexo 	AS S 	ON 	S.codigo_sexo	 = M.codigo_sexo
+INNER JOIN especies AS E 	ON 	E.codigo_especie = M.codigo_especie
+INNER JOIN tamaño 	AS T 	ON 	T.codigo_tamaño	 = M.codigo_tamaño
+INNER JOIN sexo 	AS S 	ON 	S.codigo_sexo	 = M.codigo_sexo
 
 WHERE M.cantidad = 1
 ORDER BY M.edad DESC

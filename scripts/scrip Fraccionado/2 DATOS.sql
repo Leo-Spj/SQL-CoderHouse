@@ -212,7 +212,8 @@ VALUES
 (8,60831369,'2022-07-04'),
 (9,85498508,'2022-08-12'),
 (13,84652514,'2022-10-20'),
-(15,88250405,'2022-11-11'),
+-- la mascota con codigo 15 la dejaré sin cuidado del personal
+-- (15,88250405,'2022-11-11'),
 (14,72919941,'2022-11-23')
 ;
 INSERT INTO observaciones_adoptante
