@@ -20,7 +20,7 @@ BEGIN
 			SELECT codigo_especie 
 			FROM especies 
 			WHERE codigo_especie = 1)
-        ORDER BY M.edad DESC;
+        ORDER BY M.cantidad DESC;
 	END IF;
     
 	IF (tipo_especie = 'gato') THEN
@@ -38,7 +38,7 @@ BEGIN
 		SELECT codigo_especie 
 		FROM especies 
         WHERE codigo_especie = 2)
-        ORDER BY M.edad DESC;
+        ORDER BY M.cantidad DESC;
 	END IF;
 END$$
 

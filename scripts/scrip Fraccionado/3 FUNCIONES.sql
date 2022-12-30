@@ -4,26 +4,25 @@
 DROP FUNCTION IF EXISTS `años_transcurridos`;
 DELIMITER $$
 CREATE FUNCTION `años_transcurridos` (fecha date)
-returns int
-deterministic
-begin
-declare años int;
-set años = year(curdate()) - year(fecha);
-return años;
-
-end$$
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	DECLARE años INT;
+	SET años = year(curdate()) - year(fecha);
+	RETURN años;
+END$$
 
   
 DROP FUNCTION IF EXISTS `meses_transcurridos`;
 DELIMITER $$
 USE `nuevo_huellitas`$$
 CREATE FUNCTION  `meses_transcurridos` (fecha date)
-returns int
-deterministic
-begin
-declare meses int;
-set meses = month(curdate()) - month(fecha);
-return meses;
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	DECLARE meses INT;
+	SET meses = month(curdate()) - month(fecha);
+	return meses;
 END$$
 
 
@@ -74,4 +73,5 @@ BEGIN
 
 RETURN cadena;
 END$$
+
 DELIMITER ;

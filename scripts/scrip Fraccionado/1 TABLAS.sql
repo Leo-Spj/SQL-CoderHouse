@@ -127,6 +127,10 @@ CREATE TABLE IF NOT EXISTS observaciones_adoptante(
     
     FOREIGN KEY (codigo_adopcion) REFERENCES adoptante(codigo_adopcion) ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+/*
+-- donaciones - futura implementacion:
+
 CREATE TABLE IF NOT EXISTS rucs(
 	ruc INT NOT NULL UNIQUE,
     nombre_asociado VARCHAR(200) NOT NULL UNIQUE,
@@ -153,6 +157,9 @@ CREATE TABLE IF NOT EXISTS donante(
     FOREIGN KEY (ruc) REFERENCES  rucs(ruc) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (codigo_tipo_donacion) REFERENCES categoria_donacion(codigo_tipo_donacion) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
+
+
+-- gastos e ingresos - futura implementacion
 
 CREATE TABLE IF NOT EXISTS tipo_gasto(
 	codigo_gasto INT NOT NULL AUTO_INCREMENT UNIQUE,
@@ -189,3 +196,4 @@ CREATE TABLE IF NOT EXISTS actividades_eventos(
     PRIMARY KEY (id_actividad),    
     FOREIGN KEY (tipo_actividad) REFERENCES tipo_actividad(codigo_actividad) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
+*/
