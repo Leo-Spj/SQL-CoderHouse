@@ -6,7 +6,7 @@
 ----------------
 
 | Elementos incluidos|
-| :-------------: |
+| :------------- |
 | 15 Tablas| 
 | 6 Vistas| 
 | 3 Store procedure| 
